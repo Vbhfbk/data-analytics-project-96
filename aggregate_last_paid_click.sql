@@ -57,10 +57,10 @@ leads_by_marks as (
 
 select
     cv.campaign_date as visit_date,
+    cv.visitors_count,
     cv.utm_source,
     cv.utm_medium,
     cv.utm_campaign,
-    cv.visitors_count,
     coalesce(y.summ, 0) + coalesce(v.summ, 0) as total_cost,
     count(lm.lead_id) as leads_count,
     sum(
