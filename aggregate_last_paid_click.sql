@@ -50,11 +50,11 @@ vk as (
 )
 
 select
-	to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,    
+	to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
+	count(distinct t.visitor_id) as visitors_count,
 	t.utm_source,
     t.utm_medium,
     t.utm_campaign,
-    count(distinct t.visitor_id) as visitors_count,
     coalesce(y.summ, v.summ, 0) as total_cost,
     count(distinct t.lead_id) as leads_count,
     sum(
