@@ -1,7 +1,7 @@
 select *
 from (
-    select distinct on (l.visitor_id)
-        l.visitor_id,
+    select distinct on (s.visitor_id)
+        s.visitor_id,
         s.visit_date,
         s.source as utm_source,
         s.medium as utm_medium,
@@ -13,12 +13,11 @@ from (
         l.status_id
     from sessions as s
     left join leads as l
-        on
-            s.visitor_id = l.visitor_id
-            and s.visit_date <= l.created_at
-            and l.lead_id is not null
-            and s.medium != 'organic'
-    order by l.visitor_id asc, s.visit_date desc
+        on 
+        	s.visitor_id = l.visitor_id
+        	and s.visit_date <= l.created_at
+   	where s.medium != 'organic'
+    order by s.visitor_id asc, s.visit_date desc
 ) as t
 order by
     amount desc nulls last,
