@@ -55,7 +55,7 @@ select
 	t.utm_source,
     t.utm_medium,
     t.utm_campaign,
-    coalesce(y.summ, v.summ, 0) as total_cost,
+    coalesce(y.summ, v.summ) as total_cost,
     count(distinct t.lead_id) as leads_count,
     sum(
         case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
@@ -79,8 +79,7 @@ group by
     t.utm_source,
     t.utm_medium,
     t.utm_campaign,
-    --count(distinct t.visitor_id),
-    coalesce(y.summ, v.summ, 0)
+    coalesce(y.summ, v.summ)
 order by
     sum(t.amount) desc nulls last,
     to_char(t.visit_date, 'YYYY-MM-DD') asc,
