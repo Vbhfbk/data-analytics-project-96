@@ -18,8 +18,8 @@ select
     (date(t.created_at) - date(t.visit_date)) as closing_duration,
     ntile(100)
         over (
-        	order by date(t.created_at) - date(t.visit_date)
-	)
+			order by date(t.created_at) - date(t.visit_date)
+		)
 	as percentil_of_duration
 from t
 where t.lead_id is not null;
@@ -48,7 +48,7 @@ result as (
         count(distinct t.visitor_id) as visitors_count,
         count(distinct t.lead_id) as leads_count,
         sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end)
-		as purchases_count
+        as purchases_count
     from t
     group by t.utm_source
 )
