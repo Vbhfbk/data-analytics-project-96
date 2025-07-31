@@ -86,5 +86,4 @@ order by
     count(distinct t.visitor_id) desc,
     t.utm_source asc,
     t.utm_medium asc,
-    t.utm_campaign asc
-;
+    t.utm_campaign asc;
