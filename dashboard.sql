@@ -16,15 +16,15 @@ select
 	round(cast(count(visitor_id) as DECIMAL) / cast(count(distinct visitor_id) as DECIMAL), 2) as avg_visits
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	case
-			when to_char(visit_date, 'ID') = '1' then 'пн'
-			when to_char(visit_date, 'ID') = '2' then 'вт'
-			when to_char(visit_date, 'ID') = '3' then 'ср'
-			when to_char(visit_date, 'ID') = '4' then 'чт'
-			when to_char(visit_date, 'ID') = '5' then 'пт'
-			when to_char(visit_date, 'ID') = '6' then 'сб'
-			else 'вс' end,
+    to_char(visit_date, 'YYYY-MM-DD'),
+    case
+		when to_char(visit_date, 'ID') = '1' then 'пн'
+		when to_char(visit_date, 'ID') = '2' then 'вт'
+		when to_char(visit_date, 'ID') = '3' then 'ср'
+		when to_char(visit_date, 'ID') = '4' then 'чт'
+		when to_char(visit_date, 'ID') = '5' then 'пт'
+		when to_char(visit_date, 'ID') = '6' then 'сб'
+		else 'вс' end,
     	to_char(visit_date, 'W'),
     	case when to_char(visit_date, 'ID') in ('6', '7') or to_char(visit_date, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end;
 
@@ -47,20 +47,20 @@ select
 	round(cast(count(visitor_id) as decimal) / cast(count(distinct visitor_id) as decimal), 2) as avg_visits
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	case
-			when to_char(visit_date, 'ID') = '1' then 'понедельник'
-			when to_char(visit_date, 'ID') = '2' then 'вторник'
-			when to_char(visit_date, 'ID') = '3' then 'среда'
-			when to_char(visit_date, 'ID') = '4' then 'четверг'
-			when to_char(visit_date, 'ID') = '5' then 'пятница'
-			when to_char(visit_date, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
+    to_char(visit_date, 'YYYY-MM-DD'),
+    case
+		when to_char(visit_date, 'ID') = '1' then 'понедельник'
+		when to_char(visit_date, 'ID') = '2' then 'вторник'
+		when to_char(visit_date, 'ID') = '3' then 'среда'
+		when to_char(visit_date, 'ID') = '4' then 'четверг'
+		when to_char(visit_date, 'ID') = '5' then 'пятница'
+		when to_char(visit_date, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
     	to_char(visit_date, 'HH24'),
     	to_char(visit_date, 'ID'),
     	to_char(visit_date, 'W');
 
---3. Посещаемость сайта в течение суток
+--3. Посещаемость сайта в течение суток, по дням недели
 select
 	to_char(visit_date, 'YYYY-MM-DD') as visit_date,
 	to_char(visit_date, 'HH24') as hour,
@@ -71,26 +71,10 @@ select
 	round(cast(count(visitor_id) as decimal) / cast(count(distinct visitor_id) as decimal), 2) as avg_visits
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    	to_char(visit_date, 'W');
-
---4. Посещаемость сайта по дням недели
-select
-	to_char(visit_date, 'YYYY-MM-DD') as visit_date,
-	to_char(visit_date, 'HH24') as hour,
-	to_char(visit_date, 'ID') as day_of_week,
-	to_char(visit_date, 'W') as number_of_week,	
-	count(visitor_id) as visits,
-	count(distinct visitor_id) as unique_visitors,
-	round(cast(count(visitor_id) as decimal) / cast(count(distinct visitor_id) as decimal), 2) as avg_visits
-from sessions
-group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    	to_char(visit_date, 'W');
+    to_char(visit_date, 'YYYY-MM-DD'),
+    to_char(visit_date, 'HH24'),
+    to_char(visit_date, 'ID'),
+    to_char(visit_date, 'W');
 
 --5. Посещаемость сайта по неделям в течение месяца
 select
@@ -105,37 +89,38 @@ select
 		when to_char(visit_date, 'ID') = '5' then 'пятница'
 		when to_char(visit_date, 'ID') = '6' then 'суббота'
 		else 'воскресенье' end as day_of_week,
-		case
-		  when visit_date < '2023-06-05'  then '1'
-		  when visit_date < '2023-06-12'  then '2'
-		  when visit_date < '2023-06-19'  then '3'
-		  when visit_date < '2023-06-26'  then '4'
-		  else '5' end as number_of_week,		
+	case
+		when visit_date < '2023-06-05'  then '1'
+		when visit_date < '2023-06-12'  then '2'
+		when visit_date < '2023-06-19'  then '3'
+		when visit_date < '2023-06-26'  then '4'
+		else '5' end as number_of_week,		
 	count(visitor_id) as visits,
 	count(distinct visitor_id) as unique_visitors,
 	round(cast(count(visitor_id) as decimal) / cast(count(distinct visitor_id) as decimal), 2) as avg_visits
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	case
-			when to_char(visit_date, 'ID') = '1' then 'понедельник'
-			when to_char(visit_date, 'ID') = '2' then 'вторник'
-			when to_char(visit_date, 'ID') = '3' then 'среда'
-			when to_char(visit_date, 'ID') = '4' then 'четверг'
-			when to_char(visit_date, 'ID') = '5' then 'пятница'
-			when to_char(visit_date, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    	case
-	      when visit_date < '2023-06-05'  then '1'
-		    when visit_date < '2023-06-12'  then '2'
-		    when visit_date < '2023-06-19'  then '3'
-		    when visit_date < '2023-06-26'  then '4'
-		  else '5' end;
+    to_char(visit_date, 'YYYY-MM-DD'),
+    case
+		when to_char(visit_date, 'ID') = '1' then 'понедельник'
+		when to_char(visit_date, 'ID') = '2' then 'вторник'
+		when to_char(visit_date, 'ID') = '3' then 'среда'
+		when to_char(visit_date, 'ID') = '4' then 'четверг'
+		when to_char(visit_date, 'ID') = '5' then 'пятница'
+		when to_char(visit_date, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
+    to_char(visit_date, 'HH24'),
+    to_char(visit_date, 'ID'),
+    case
+	    when visit_date < '2023-06-05'  then '1'
+		when visit_date < '2023-06-12'  then '2'
+		when visit_date < '2023-06-19'  then '3'
+		when visit_date < '2023-06-26'  then '4'
+		else '5' end;
 
 --6. Топ-10 каналов привлечения по количеству посетителей сайта
- select distinct on (s.visitor_id)
+with t as (
+    select distinct on (s.visitor_id)
         s.visitor_id,
         s.visit_date,
         s.source as utm_source,
@@ -148,10 +133,10 @@ group by
         l.status_id
     from sessions as s
     left join leads as l
-        on
-            s.visitor_id = l.visitor_id
-            and s.visit_date <= l.created_at
-    where s.medium != 'organic'
+        on 
+        	s.visitor_id = l.visitor_id
+        	and s.visit_date <= l.created_at
+   	where s.medium != 'organic'
     order by s.visitor_id asc, s.visit_date desc
 ),
 
@@ -186,7 +171,7 @@ vk as (
 ),
 
 result as (
-select
+	select
 		to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
 		to_char(t.visit_date, 'ID') as day_of_week,
 		to_char(t.visit_date, 'W') as number_of_week,
@@ -261,7 +246,7 @@ group by source
 order by count(visitor_id) desc
 limit 10;
 
---7. Топ-4 каналов привлечения посетителей сайта в течение месяца
+--7. Топ-4 каналов привлечения посетителей сайта в течение месяца, в течение недели
 select
 	to_char(visit_date, 'YYYY-MM-DD') as visit_date,
 	to_char(visit_date, 'HH24') as hour,
@@ -273,29 +258,11 @@ select
 	round(cast(count(visitor_id) as DECIMAL) / cast(count(distinct visitor_id) as DECIMAL), 2) as avg_visits
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    	to_char(visit_date, 'W'),
-    	source;
-
---8. Топ-4 каналов привлечения посетителей сайта в течение недели
-select
-	to_char(visit_date, 'YYYY-MM-DD') as visit_date,
-	to_char(visit_date, 'HH24') as hour,
-	to_char(visit_date, 'ID') as day_of_week,
-	to_char(visit_date, 'W') as number_of_week,
-	source as utm_source,
-	count(visitor_id) as visits,
-	count(distinct visitor_id) as unique_visitors,
-	round(cast(count(visitor_id) as DECIMAL) / cast(count(distinct visitor_id) as DECIMAL), 2) as avg_visits
-from sessions
-group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    	to_char(visit_date, 'W'),
-    	source;
+    to_char(visit_date, 'YYYY-MM-DD'),
+    to_char(visit_date, 'HH24'),
+    to_char(visit_date, 'ID'),
+    to_char(visit_date, 'W'),
+    source;
 
 --9. Топ-4 каналов привлечения по неделям в течение месяца
 select
@@ -314,17 +281,17 @@ select
 	case when to_char(visit_date, 'ID') in ('6', '7') or to_char(visit_date, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end as holyday_check
 from sessions
 group by
-    	to_char(visit_date, 'YYYY-MM-DD'),
-    	to_char(visit_date, 'HH24'),
-    	to_char(visit_date, 'ID'),
-    		case
+    to_char(visit_date, 'YYYY-MM-DD'),
+    to_char(visit_date, 'HH24'),
+    to_char(visit_date, 'ID'),
+    case
 		when visit_date < '2023-06-05'  then '1'
 		when visit_date < '2023-06-12'  then '2'
 		when visit_date < '2023-06-19'  then '3'
 		when visit_date < '2023-06-26'  then '4'
 		else '5' end,
-    	case when to_char(visit_date, 'ID') in ('6', '7') or to_char(visit_date, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
-    	source;
+    case when to_char(visit_date, 'ID') in ('6', '7') or to_char(visit_date, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
+    source;
 
 --10. Топ-10 каналов по лидогенерации
 select
@@ -485,13 +452,13 @@ vk as (
 select
 	to_char(t.created_at, 'YYYY-MM-DD') as visit_date,
 	case
-			when to_char(visit_date, 'ID') = '1' then 'понедельник'
-			when to_char(visit_date, 'ID') = '2' then 'вторник'
-			when to_char(visit_date, 'ID') = '3' then 'среда'
-			when to_char(visit_date, 'ID') = '4' then 'четверг'
-			when to_char(visit_date, 'ID') = '5' then 'пятница'
-			when to_char(visit_date, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
+		when to_char(visit_date, 'ID') = '1' then 'понедельник'
+		when to_char(visit_date, 'ID') = '2' then 'вторник'
+		when to_char(visit_date, 'ID') = '3' then 'среда'
+		when to_char(visit_date, 'ID') = '4' then 'четверг'
+		when to_char(visit_date, 'ID') = '5' then 'пятница'
+		when to_char(visit_date, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
 	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end as holyday_check,
 	t.utm_source,
     t.utm_medium,
@@ -518,14 +485,14 @@ where coalesce(y.summ, v.summ) is not null
 group by
     to_char(t.created_at, 'YYYY-MM-DD'),
     case
-			when to_char(visit_date, 'ID') = '1' then 'понедельник'
-			when to_char(visit_date, 'ID') = '2' then 'вторник'
-			when to_char(visit_date, 'ID') = '3' then 'среда'
-			when to_char(visit_date, 'ID') = '4' then 'четверг'
-			when to_char(visit_date, 'ID') = '5' then 'пятница'
-			when to_char(visit_date, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
-		case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
+		when to_char(visit_date, 'ID') = '1' then 'понедельник'
+		when to_char(visit_date, 'ID') = '2' then 'вторник'
+		when to_char(visit_date, 'ID') = '3' then 'среда'
+		when to_char(visit_date, 'ID') = '4' then 'четверг'
+		when to_char(visit_date, 'ID') = '5' then 'пятница'
+		when to_char(visit_date, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
+	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
     t.utm_source,
     t.utm_medium,
     t.utm_campaign,
@@ -594,21 +561,21 @@ select
 	to_char(t.created_at, 'YYYY-MM-DD') as visit_date,
 	to_char(t.created_at, 'ID') as day_of_week_number,
 	case
-			when to_char(t.created_at, 'ID') = '1' then 'понедельник'
-			when to_char(t.created_at, 'ID') = '2' then 'вторник'
-			when to_char(t.created_at, 'ID') = '3' then 'среда'
-			when to_char(t.created_at, 'ID') = '4' then 'четверг'
-			when to_char(t.created_at, 'ID') = '5' then 'пятница'
-			when to_char(t.created_at, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end  as day_of_week,
+		when to_char(t.created_at, 'ID') = '1' then 'понедельник'
+		when to_char(t.created_at, 'ID') = '2' then 'вторник'
+		when to_char(t.created_at, 'ID') = '3' then 'среда'
+		when to_char(t.created_at, 'ID') = '4' then 'четверг'
+		when to_char(t.created_at, 'ID') = '5' then 'пятница'
+		when to_char(t.created_at, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end  as day_of_week,
 	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end as holyday_check,
 	case
-		  when t.created_at < '2023-06-05'  then '1'
-		  when t.created_at < '2023-06-12'  then '2'
-		  when t.created_at < '2023-06-19'  then '3'
-		  when t.created_at < '2023-06-26'  then '4'
-		  else '5' end as number_of_week,
-	  t.utm_source,
+		when t.created_at < '2023-06-05'  then '1'
+		when t.created_at < '2023-06-12'  then '2'
+		when t.created_at < '2023-06-19'  then '3'
+		when t.created_at < '2023-06-26'  then '4'
+		else '5' end as number_of_week,
+	t.utm_source,
     t.utm_medium,
     t.utm_campaign,
     count(distinct t.visitor_id) as visitors_count,
@@ -634,20 +601,20 @@ group by
     to_char(t.created_at, 'YYYY-MM-DD'),
     to_char(t.created_at, 'ID'),
     case
-			when to_char(t.created_at, 'ID') = '1' then 'понедельник'
-			when to_char(t.created_at, 'ID') = '2' then 'вторник'
-			when to_char(t.created_at, 'ID') = '3' then 'среда'
-			when to_char(t.created_at, 'ID') = '4' then 'четверг'
-			when to_char(t.created_at, 'ID') = '5' then 'пятница'
-			when to_char(t.created_at, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
-		case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
-		case
-		  when t.created_at < '2023-06-05'  then '1'
-		  when t.created_at < '2023-06-12'  then '2'
-		  when t.created_at < '2023-06-19'  then '3'
-		  when t.created_at < '2023-06-26'  then '4'
-		  else '5' end,		
+		when to_char(t.created_at, 'ID') = '1' then 'понедельник'
+		when to_char(t.created_at, 'ID') = '2' then 'вторник'
+		when to_char(t.created_at, 'ID') = '3' then 'среда'
+		when to_char(t.created_at, 'ID') = '4' then 'четверг'
+		when to_char(t.created_at, 'ID') = '5' then 'пятница'
+		when to_char(t.created_at, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
+	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
+	case
+		when t.created_at < '2023-06-05'  then '1'
+		when t.created_at < '2023-06-12'  then '2'
+		when t.created_at < '2023-06-19'  then '3'
+		when t.created_at < '2023-06-26'  then '4'
+		else '5' end,		
     t.utm_source,
     t.utm_medium,
     t.utm_campaign,
@@ -716,21 +683,21 @@ select
 	to_char(t.created_at, 'YYYY-MM-DD') as visit_date,
 	to_char(t.created_at, 'ID') as day_of_week_number,
 	case
-			when to_char(t.created_at, 'ID') = '1' then 'понедельник'
-			when to_char(t.created_at, 'ID') = '2' then 'вторник'
-			when to_char(t.created_at, 'ID') = '3' then 'среда'
-			when to_char(t.created_at, 'ID') = '4' then 'четверг'
-			when to_char(t.created_at, 'ID') = '5' then 'пятница'
-			when to_char(t.created_at, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end  as day_of_week,
+		when to_char(t.created_at, 'ID') = '1' then 'понедельник'
+		when to_char(t.created_at, 'ID') = '2' then 'вторник'
+		when to_char(t.created_at, 'ID') = '3' then 'среда'
+		when to_char(t.created_at, 'ID') = '4' then 'четверг'
+		when to_char(t.created_at, 'ID') = '5' then 'пятница'
+		when to_char(t.created_at, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end  as day_of_week,
 	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end as holyday_check,
 	case
-		  when t.created_at < '2023-06-05'  then '1'
-		  when t.created_at < '2023-06-12'  then '2'
-		  when t.created_at < '2023-06-19'  then '3'
-		  when t.created_at < '2023-06-26'  then '4'
-		  else '5' end as number_of_week,
-	  t.utm_source,
+		when t.created_at < '2023-06-05'  then '1'
+		when t.created_at < '2023-06-12'  then '2'
+		when t.created_at < '2023-06-19'  then '3'
+		when t.created_at < '2023-06-26'  then '4'
+		else '5' end as number_of_week,
+	t.utm_source,
     t.utm_medium,
     t.utm_campaign,
     count(distinct t.visitor_id) as visitors_count,
@@ -756,20 +723,20 @@ group by
     to_char(t.created_at, 'YYYY-MM-DD'),
     to_char(t.created_at, 'ID'),
     case
-			when to_char(t.created_at, 'ID') = '1' then 'понедельник'
-			when to_char(t.created_at, 'ID') = '2' then 'вторник'
-			when to_char(t.created_at, 'ID') = '3' then 'среда'
-			when to_char(t.created_at, 'ID') = '4' then 'четверг'
-			when to_char(t.created_at, 'ID') = '5' then 'пятница'
-			when to_char(t.created_at, 'ID') = '6' then 'суббота'
-			else 'воскресенье' end,
-		case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
-		case
-		  when t.created_at < '2023-06-05'  then '1'
-		  when t.created_at < '2023-06-12'  then '2'
-		  when t.created_at < '2023-06-19'  then '3'
-		  when t.created_at < '2023-06-26'  then '4'
-		  else '5' end,		
+		when to_char(t.created_at, 'ID') = '1' then 'понедельник'
+		when to_char(t.created_at, 'ID') = '2' then 'вторник'
+		when to_char(t.created_at, 'ID') = '3' then 'среда'
+		when to_char(t.created_at, 'ID') = '4' then 'четверг'
+		when to_char(t.created_at, 'ID') = '5' then 'пятница'
+		when to_char(t.created_at, 'ID') = '6' then 'суббота'
+		else 'воскресенье' end,
+	case when to_char(t.created_at, 'ID') in ('6', '7') or to_char(t.created_at, 'YYYY-MM-DD') = '2023-06-12' then 'выходной' end,
+	case
+		when t.created_at < '2023-06-05'  then '1'
+		when t.created_at < '2023-06-12'  then '2'
+		when t.created_at < '2023-06-19'  then '3'
+		when t.created_at < '2023-06-26'  then '4'
+		else '5' end,		
     t.utm_source,
     t.utm_medium,
     t.utm_campaign,
@@ -781,22 +748,6 @@ order by
     t.utm_source asc,
     t.utm_medium asc,
     t.utm_campaign asc;
-
---16. Строим воронку продаж
-select
-	'total_visits' as level,
-	count(visitor_id) as count
-from sessions
-union all
-select
-	'total_leads' as level,
-count(distinct lead_id) as count
-	from leads
-union all
-select
-	'total_purchases' as level,
-	sum(case when closing_reason = 'Успешная продажа' then 1 else 0 end) as count
-from leads;
 
 --16. Считаем конверсии
 with t as (
@@ -859,9 +810,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -968,9 +917,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -1001,21 +948,21 @@ order by
 
 select
 	utm_source,
-  sum(visitors_count) as total_visitors,
-   sum(cost) as total_cost,
-  sum(leads_count) as total_leads,
-  round(cast(sum(leads_count) as decimal) * 100 / cast(sum(visitors_count) as decimal), 2) as users_to_leads_percent,
-  case
-    when sum(purchases_count) = 0 then 0
-    else round(cast(sum(purchases_count) as decimal) * 100 / cast(sum(leads_count) as decimal), 2) 
-  end as leads_to_purchases_percent,
-  sum(purchases_count) as total_purchases,
-  sum(revenue) - sum(cost) as total_profit,
-  sum(revenue) as total_revenue,
-  case
-    when sum(purchases_count) = 0 then 0
-    else round((sum(revenue) - sum(cost)) * 100 / sum(cost), 2) 
-  end as roi
+  	sum(visitors_count) as total_visitors,
+   	sum(cost) as total_cost,
+  	sum(leads_count) as total_leads,
+  	round(cast(sum(leads_count) as decimal) * 100 / cast(sum(visitors_count) as decimal), 2) as users_to_leads_percent,
+  	case
+    	when sum(purchases_count) = 0 then 0
+    	else round(cast(sum(purchases_count) as decimal) * 100 / cast(sum(leads_count) as decimal), 2) 
+  	end as leads_to_purchases_percent,
+  	sum(purchases_count) as total_purchases,
+  	sum(revenue) - sum(cost) as total_profit,
+  	sum(revenue) as total_revenue,
+  	case
+    	when sum(purchases_count) = 0 then 0
+    	else round((sum(revenue) - sum(cost)) * 100 / sum(cost), 2) 
+  	end as roi
 from result
 group by utm_source
 order by sum(visitors_count) desc
@@ -1082,9 +1029,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -1198,9 +1143,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -1320,9 +1263,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -1437,9 +1378,7 @@ select
     coalesce(y.summ, v.summ) as cost,
     count(distinct t.lead_id) as leads_count,
         round(cast(count(distinct t.lead_id) as decimal) * 100 / cast(count(distinct t.visitor_id) as decimal), 2) as users_to_leads_percent,
-    sum(
-        case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
-    ) as purchases_count,
+    sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) as purchases_count,
     case
     	when sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end) = 0 then 0
     	else round(cast(sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end ) as decimal) * 100 / cast(count(distinct t.lead_id) as decimal), 2) 
@@ -1505,33 +1444,38 @@ select
 from result;
 
 --27. Считаем данные по расходам на кампании
-    select
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        campaign_name,
-        to_char(campaign_date, 'YYYY-MM-DD') as campaign_date,
-        sum(daily_spent) as summ
-    from ya_ads
-    group by
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        campaign_name,
-        to_char(campaign_date, 'YYYY-MM-DD')
-	union
-	select
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        campaign_name,
-       	to_char(campaign_date, 'YYYY-MM-DD') as campaign_date,
-        sum(daily_spent) as summ
-    from vk_ads
-    group by
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        campaign_name,
-        to_char(campaign_date, 'YYYY-MM-DD')
-    order by 1, 2, 3, 4, 5;
+select
+	utm_source,
+	utm_medium,
+	utm_campaign,
+	campaign_name,
+	to_char(campaign_date, 'YYYY-MM-DD') as campaign_date,
+	sum(daily_spent) as summ
+from ya_ads
+group by
+	utm_source,
+	utm_medium,
+	utm_campaign,
+	campaign_name,
+	to_char(campaign_date, 'YYYY-MM-DD')
+union
+select
+	utm_source,
+	utm_medium,
+	utm_campaign,
+	campaign_name,
+	to_char(campaign_date, 'YYYY-MM-DD') as campaign_date,
+	sum(daily_spent) as summ
+from vk_ads
+group by
+	utm_source,
+	utm_medium,
+	utm_campaign,
+	campaign_name,
+	to_char(campaign_date, 'YYYY-MM-DD')
+order by 
+	utm_source,
+	utm_medium,
+	utm_campaign,
+	campaign_name,
+	to_char(campaign_date, 'YYYY-MM-DD') as campaign_date;
