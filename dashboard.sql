@@ -17,8 +17,9 @@ with t as (
 select
     (date(t.created_at) - date(t.visit_date)) as closing_duration,
     ntile(100)
-        over (order by date(t.created_at) - date(t.visit_date))
-        as percentil_of_duration
+        over (
+        order by date(t.created_at) - date(t.visit_date))
+	as percentil_of_duration
 from t
 where t.lead_id is not null;
 
@@ -46,7 +47,7 @@ result as (
         count(distinct t.visitor_id) as visitors_count,
         count(distinct t.lead_id) as leads_count,
         sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end)
-            as purchases_count
+		as purchases_count
     from t
     group by t.utm_source
 )
@@ -168,10 +169,10 @@ result as (
         t.utm_medium,
         t.utm_campaign,
         count(distinct t.visitor_id) as visitors_count,
-        coalesce(y.summ, v.summ) as cost,
+        coalesce(y.summ, v.summ) as costed,
         count(distinct t.lead_id) as leads_count,
         sum(case when t.closing_reason = 'Успешная продажа' then 1 else 0 end)
-            as purchases_count,
+        as purchases_count,
         sum(t.amount) as revenue
     from t
     left join ya as y
@@ -213,19 +214,19 @@ select
     end as leads_to_purchases_percent,
     case
         when sum(r.purchases_count) = 0 then 0
-        else round((sum(r.revenue) - sum(r.cost)) * 100 / sum(r.cost), 2)
+        else round((sum(r.revenue) - sum(r.costed)) * 100 / sum(r.costed), 2)
     end as roi,
     case
         when sum(r.visitors_count) = 0 then 0 else
-            round(sum(r.cost) / sum(r.visitors_count), 2)
+            round(sum(r.costed) / sum(r.visitors_count), 2)
     end as cpu,
     case
         when sum(r.leads_count) = 0 then 0 else
-            round(sum(r.cost) / sum(r.leads_count), 2)
+            round(sum(r.costed) / sum(r.leads_count), 2)
     end as cpl,
     case
         when sum(r.purchases_count) = 0 then 0 else
-            round(sum(r.cost) / sum(r.purchases_count), 2)
+            round(sum(r.costed) / sum(r.purchases_count), 2)
     end as cppu
 from result as r
 group by r.utm_source
