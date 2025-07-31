@@ -50,13 +50,13 @@ vk as (
 )
 
 select
-	t.utm_source,
-	t.utm_medium,
-	t.utm_campaign,
-	to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
-	count(distinct t.visitor_id) as visitors_count,
-	coalesce(y.summ, v.summ) as total_cost,
-	count(distinct t.lead_id) as leads_count,
+    t.utm_source,
+    t.utm_medium,
+    t.utm_campaign,
+    to_char(t.visit_date, 'YYYY-MM-DD') as visit_date,
+    count(distinct t.visitor_id) as visitors_count,
+    coalesce(y.summ, v.summ) as total_cost,
+    count(distinct t.lead_id) as leads_count,
     sum(
         case when t.closing_reason = 'Успешная продажа' then 1 else 0 end
     ) as purchases_count,
@@ -86,4 +86,5 @@ order by
     count(distinct t.visitor_id) desc,
     t.utm_source asc,
     t.utm_medium asc,
-	t.utm_campaign asc;
+    t.utm_campaign asc
+;
