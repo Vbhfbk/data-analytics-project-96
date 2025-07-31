@@ -18,9 +18,9 @@ select
     (date(t.created_at) - date(t.visit_date)) as closing_duration,
     ntile(100)
         over (
-			order by date(t.created_at) - date(t.visit_date)
-		)
-	as percentil_of_duration
+            order by date(t.created_at) - date(t.visit_date)
+        )
+    as percentil_of_duration
 from t
 where t.lead_id is not null;
 
